@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block head %}
+	{% block title %}
+		<title>GreenHub - Электромобили</title>
+	{% endblock %}
+	<meta name="description" content="GreenHub — электромобили в широком ассортименте. Ford Focus, Nissan Leaf, Tesla Model S, Fiat 500, все доступные модели в австосалоне электромобилей GreenHub в городе Днепр!">
+{% endblock %}
+
+{% block content %}
+<div class="text-center mt-4 mb-3 mx-3">
+	<h2>Выбери Автомобиль По Душе</h2>
+</div>
+	<div class="container my-4">
+		<div class="text-center">
+			<div class="">
+				<button class="btn btn-lg btn-success" data-toggle="collapse" href="#veh_list" role="button" aria-expanded="true">
+			    Краткий Список Авто
+				</button>
+				<div class="collapse" id="veh_list">
+			    <table class="table my-3 table-responsive-md text-center">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Модель</th>
+								<th>Год</th>
+								<th>Пробег</th>
+								<th>Цена</th>
+								<th>Цвет</th>
+								<th>Салон</th>
+								<!-- <th class="col col-sm">Где</th>
+								<th class="col col-sm">Прибытие</th> -->
+							</tr>
+						</thead>
+						<tbody>
+							{% for vehicle in vehicles %}
+							<tr>
+								<th>{{vehicle.id}}</th>
+								<th>{{vehicle.veh_model}}</th>
+								<th>{{vehicle.veh_year}}</th>
+								<th>{{vehicle.veh_mileage}}</th>
+								<th>{{vehicle.veh_price}}</th>
+								<th>{{vehicle.vah_color}}</th>
+								<th>{{vehicle.veh_color_in}}</th>
+								<!-- <th class="col col-sm">{{vehicle.veh_type}}</th>
+								{% if vehicle.veh_incomming_date != '' %}
+									<th class="col col-sm">{{vehicle.veh_incomming_date}}</th>
+								{% else %}
+									<th class="col col-sm">На Месте</th>
+								{% endif %} -->
+
+							</tr>
+							{% endfor %}
+						</tbody>
+			    </table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<hr class="w-50">
+
+	{% for vehicle in vehicles %}
+
+	<div class="container">
+		<div class="row special-font">
+			<div class="col-md-7">
+				<div class="image veh_image">
+						<!-- Image corousel -->
+						<img class="img-fluid" src="{{ vehicle.veh_photo }}" alt="Vehicle image here" class="img-thumbnail">
+				</div>
+			</div>
+			<div class="col-md-5">
+				<h3>{{vehicle.veh_model}}</h3>
+				<div class="row">
+					<div class="col">
+						<p class='g-font-size-18--xs'><span></span>{{vehicle.veh_type}}</p>
+						<p class='g-font-size-18--xs'><span></span>Год:</p>
+						<p class='g-font-size-18--xs'><span></span>Пробег: </p>
+						<p class='g-font-size-18--xs'><span></span>Кузов: </p>
+						<p class='g-font-size-18--xs'><span></span>Салон: </p>
+						{% if vehicle.veh_incomming_date != '' %}<p class='g-font-size-18--xs'><span></span>Прибывает: </p>{% endif %}
+						<div class="text-center my-2">
+							<h3>{{vehicle.veh_price}}$</h3>
+						</div>
+					</div>
+					<div class="col">
+						<p>&nbsp;</p>
+						<p class='g-font-size-18--xs'><span></span>{{vehicle.veh_year}}</p>
+						<p class='g-font-size-18--xs'>{{vehicle.veh_mileage}}</p>
+						<p class='g-font-size-18--xs'>{% if vehicle.vah_color == ''%} _ {% else %} {{vehicle.vah_color}} {% endif %}</p>
+						<p class='g-font-size-18--xs'>{% if vehicle.veh_color_in == ''%} _ {% else %} {{vehicle.veh_color_in}} {% endif %}</p>
+						{% if vehicle.veh_incomming_date != '' %}<p class='g-font-size-18--xs'><span></span>{{vehicle.veh_incomming_date}}</p>{% endif %}
+					</div>
+				</div>
+				<!-- <a class="w-50">
+						<button class="btn btn-lg btn-outline-success btn-success text-center w-50 margin-bot-10" data-toggle="modal" data-target="#callmemodal">Узнать больше</button>
+				</a> -->
+			</div>
+			<hr class="w-50">
+		</div>
+	</div>
+
+	{% endfor %}
+
+
+	{% if cars.has_other_pages %}
+	  <ul class="pagination justify-content-center">
+	    {% if cars.has_previous %}
+	      <li class='page-item'><a class='page-link' href="?page={{ cars.previous_page_number }}">&laquo;</a></li>
+	    {% else %}
+	      <li class="disabled page-item"><span class='page-link'>&laquo;</span></li>
+	    {% endif %}
+	    {% for i in cars.paginator.page_range %}
+	      {% if cars.number == i %}
+	        <li class="active page-item"><span class='page-link'>{{ i }} <span class="sr-only page-link">(current)</span></span></li>
+	      {% else %}
+	        <li class='page-item'><a class='page-link' href="?page={{ i }}">{{ i }}</a></li>
+	      {% endif %}
+	    {% endfor %}
+	    {% if cars.has_next %}
+	      <li class='page-item'><a class='page-link' href="?page={{ cars.next_page_number }}">&raquo;</a></li>
+	    {% else %}
+	      <li class="disabled page-item"><span class='page-link'>&raquo;</span></li>
+	    {% endif %}
+	  </ul>
+	{% endif %}
+
+{% endblock %}
