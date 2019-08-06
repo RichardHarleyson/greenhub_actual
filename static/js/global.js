@@ -162,6 +162,27 @@ function remove_event(element){
 	}
 }
 
+$(document).ready(function(){
+		$('.file_input').change(function(){
+			// alert('Smth changed');
+			var formdata = new FormData();
+			formdata.append('client_file', $(this).parent().find('.file_input')[0].files[0]);
+			formdata.append('client_id', $(this).data('client_id'));
+			$.ajax({
+				url: '/gh_crm/load_file',
+				type: 'POST',
+				data: formdata,
+				processData: false,
+				contentType: false,
+				success: function(res){
+					console.log(res);
+					$(this).parent().find('.btn_file_input').css('background-color', 'green');
+					setTimeout(function(){$(this).parent().find('.btn_file_input').css('background-color', '#007bff')});
+				}
+			});
+		});
+})
+
 // Добавить Авто
 
 $(document).ready(function(){
@@ -187,6 +208,60 @@ function call_imgmodal(elem){
 	var veh_photo = $(elem).data('veh_photo');
 	$('#veh_photo_to_set').prop('src', veh_photo);
 }
+
+function call_imgmodal_client(elem){
+	var files = $(elem).data('client_files');
+	var files_id = $(elem).data('files_id');
+	var split_files = files.split(";");
+	var split_files_id = files_id.split(";");
+	$('#imgmodal_inside').html('');
+	var fhtml = '';
+	for(let i = 0; i < (split_files.length - 1); i++){
+		fhtml += '<img class="del_file" data-file_id="'+split_files_id[i]+'" src="'+split_files[i]+'" alt="" style="width:100%" >'
+	}
+	try{
+		$('#imgmodal_inside').slick('unslick');
+	}catch{
+		console.log('unslick failed');
+	}
+	$('#imgmodal_inside').html(fhtml);
+	try{
+		$('#imgmodal_inside').slick({
+			infinite: true,
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			prevArrow: "#imgmodal_prev",
+			nextArrow: "#imgmodal_next",
+		})
+		$('#imgmodal_inside').slick('setPosition');
+	}catch{
+		console.log('Some error happened');
+	}
+}
+
+function file_del(elem){
+	var item_id = $('.slick-current').data('file_id');
+	var data = new FormData();
+	data.append('file_id', item_id);
+	$.ajax({
+		url: '/gh_crm/del_file',
+		type: 'POST',
+		data: data,
+		processData: false,
+		contentType: false,
+		success: function(rest){
+			console.log(rest);
+			$(elem).css('background', 'red');
+			setTimeout(function(){ $(elem).css('background', 'white')}, 2000);
+		}
+	})
+}
+
+$(document).ready(function(){
+	$('#modalIMG').on('shown.bs.modal', function () {
+		$('#imgmodal_inside').slick('setPosition');
+	})
+})
 
 // Update авто
 function upd_veh(elem){

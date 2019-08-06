@@ -12,6 +12,7 @@ urlpatterns = [
 	path('remove_client', views.remove_client, name="gh_crm_remove_client"),
 	path('update_event_status', views.update_event_status, name="gh_crm_update_event_status"),
 	path('update_client_status', views.update_client_status, name="gh_crm_update_client_status"),
-
+	path('load_file', views.load_file, name="gh_crm_load_file"),
+	path('del_file', views.del_file, name="gh_crm_del_file"),
 	path('event_page', views.event_page, name="gh_crm_event_page"),
 ]

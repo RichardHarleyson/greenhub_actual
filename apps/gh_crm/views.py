@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Crm_Clients, Crm_Events, Client_file
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
+from django.views.decorators.csrf import csrf_exempt,csrf_protect
 import datetime
 
 def events_page(request):
@@ -11,12 +12,38 @@ def events_page(request):
 	counts = {'client_count': clients.count(), 'event_count': events.count()}
 	return render(request, 'gh_crm/crm_events.html', context={'clients': clients, 'events': events, 'content': counts,})
 
+
 def clients_page(request):
 	clients = Crm_Clients.objects.all().filter(isvisible = True)
 	events = Crm_Events.objects.all().filter(isvisible = True)
 	files = Client_file.objects.all().filter(photo_status = True)
 	counts = {'client_count': clients.count(), 'event_count': events.count()}
 	return render(request, 'gh_crm/crm_clients.html', context={'clients': clients, 'content': counts, 'files': files})
+
+
+@csrf_exempt
+def load_file(request):
+	if len(request.FILES) == 0:
+		return HttpResponse('Shit!')
+	myfile = request.FILES.get('client_file')
+	fs = FileSystemStorage()
+	filename = fs.save(myfile.name, myfile)
+	new_file = Client_file.objects.create(
+		client_file = fs.url(filename),
+		client_id = Crm_Clients.objects.get(
+			id = int(request.POST.get('client_id'))),
+		photo_status = True,
+	)
+	return HttpResponse('File Added');
+
+
+@csrf_exempt
+def del_file(request):
+	del_file = Client_file.objects.all().filter(id = int(request.POST.get('file_id'))).update(
+		photo_status = False,
+	)
+	return HttpResponse('File deleted');
+
 
 def add_client(request):
 	now = datetime.datetime.now()
