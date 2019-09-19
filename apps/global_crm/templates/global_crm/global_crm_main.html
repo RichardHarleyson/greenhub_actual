@@ -1,0 +1,234 @@
+{% extends 'global_crm_base.html' %}
+
+{% block content %}
+<!-- <div class="cotainer my-3">
+  <h1>Главная страница CRM</h1>
+</div> -->
+<div class="modal" role="dialog" id="modal_comments">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <textarea rows="6" class="form-input w-100" id="modal_comment_textarea"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div aria-hidden="true" class="modal fade" id="modalIMG" role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div id="imgmodal_inside" class="modal-body mb-0 p-0">
+				<img id="veh_photo_to_set" src="https://i3.ytimg.com/vi/vr0qNXmkUJ8/maxresdefault.jpg" alt="" style="width:100%">
+			</div>
+			<div class="modal-footer">
+				<div class="mx-auto">
+					<button class="btn btn-outline-primary btn-rounded btn-md ml-4 text-center" id="imgmodal_prev" ><i class="fas fa-arrow-left"></i></button>
+					<button class="btn btn-outline-primary btn-rounded btn-md ml-4 text-center" id="imgmodal_next" ><i class="fas fa-arrow-right"></i></button>
+				</div>
+				<button onclick="file_del(this)" class="btn btn-outline-primary btn-rounded btn-md ml-4 text-center"><i class="fas fa-trash"></i></button>
+				<button class="btn btn-outline-primary btn-rounded btn-md ml-4 text-center" data-dismiss="modal" type="button"><i class="fas fa-times"></i></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="my-3">
+  <table class='table'>
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th></th>
+        <th scope="col">Клиент</th>
+        <th scope="col">Статус</th>
+        <th scope="col">Тех. Задание</th>
+        <th scope="col">Контакты</th>
+        <th scope="col">Посл.Связь</th>
+        <th scope="col">Посл.Событие</th>
+        <th scope="col">След.Связь</th>
+        <th scope="col">След.Событие</th>
+        <th scope="col">Комментарий</th>
+        <th></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for client in clients %}
+      <tr>
+        <form class="client_tform" id="client_tform_{{client.id}}" data-client_id="{{client.id}}">
+        <td>
+          {{client.id}}
+        </td>
+        <td>
+          <a class="btn btn-sm btn-primary text-white text-right" href=".collapse_{{client.id}}" data-toggle="collapse">
+            <i class="fas fa-search"></i>
+          </a>
+        </td>
+        <td><input class="form-control" name="client_name" value="{{client.client_name}}"></td>
+        <td>
+          <select class="form-control" name="client_status" style="min-width: 140px;">
+            <option value="{{client.client_status}}">{{client.client_status}}</option>
+            <option value="В Работе" title="Новый Клиент, Подборка Авто, Склонение к Решению">В Работе</option>
+            <option value="Активный" title="Купил, Ждем Прихода, Торги + Задаток">Активный</option>
+            <option value="Пауза" title="Думает">Пауза</option>
+            <option value="Не Активный" title="Передумал, Ушел">Не Активный</option>
+          </select>
+        </td>
+        <td><textarea class="form-control comment_textarea" name="client_goal" rows="1" value="{{client.client_goal}}">{{client.client_goal}}</textarea></td>
+        <td><textarea class="form-control comment_textarea" name="client_contact" rows="1" value="{{client.client_contact}}">{{client.client_contact}}</textarea></td>
+        <td>{{client.client_last_date}}</td>
+        <td>{{client.client_last_event}}</td>
+        <td>
+          <div class="input-group date datepicker" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+          <input type="text" class="form-control" name="client_next_date" value="{{client.client_next_date}}">
+          <div class="input-group-addon">
+              <span class="glyphicon glyphicon-th"></span>
+          </div>
+          </div>
+        </td>
+        <td><input class="form-control" name="client_next_event" value="{{client.client_next_event}}"></td>
+        <td>
+          <textarea class="form-control comment_textarea" name="client_comment" rows="1"></textarea>
+        </td>
+        <td>
+          <a class="btn btn-primary btn-sm text-white" onclick="call_comment_modal(this)" data-client_comment="{{client.client_comment}}">
+            <i class="fas fa-book-open"></i>
+          </a>
+        </td>
+        <td>
+          <div class="button-group" style="min-width: 90px;">
+            <button type="submit" class="btn btn-success mr-1" data-client_id="{{client.id}}">+</button>
+            <button onclick="del_client(this)" class="btn btn-danger ml-1" data-client_id="{{client.id}}">-</button>
+          </div>
+        </td>
+        </form>
+      </tr>
+      <tr class="collapse collapse_{{client.id}}" id="collapse_{{client.id}}">
+        <td colspan="6">
+          <div class="ml-5">
+            <h4>Файлы</h4>
+            <table class="table" style="background-color: #ffffba;">
+              <thead>
+                <th scope="col">Invoice</th>
+                <th scope="col">Пасспорт</th>
+                <th scope="col">Договор</th>
+                <th scope="col">Приложение</th>
+              </thead>
+              <tbody>
+                <tr>
+
+                  <td class="td-w-200">
+                      <!-- <i class="fas fa-times fa-2x text-danger align-middle mx-2"></i> -->
+                    <span class="file_status"></span>
+                    <a onclick="call_imgmodal_client(this)" class="btn btn-primary mr-1 text-white check_file_status" data-target="#modalIMG" data-toggle="modal" data-client_files="{% for file in client.client_file.all %}{% if file.file_type == 'client_invoice' %}{{ file.client_file }};{% endif %}{% endfor %}" data-files_id="{% for file in client.client_file.all %}{% if file.file_type == 'client_invoice' %}{{ file.id }};{% endif %}{% endfor %}">
+                      <i class="fas fa-search"></i>
+                    </a>
+                    <label class="m-0 ml-1 text-white" for="file_invoice_{{client.id}}">
+                      <a class="btn btn-primary btn_file_input">
+                        <i class="far fa-file-image"></i>
+                      </a>
+                    </label>
+                    <form id="form_invoice_{{client.id}}">
+                      <input class="file_input" id="file_invoice_{{client.id}}" data-file_type="client_invoice" data-form_type="form_invoice_{{client.id}}" data-client_id="{{client.id}}" name="client_invoice" type="file" style="width: 0.1px; height: 0.1px; opacity: 0; z-index: -1; position: absolute; overflow: hidden">
+                    </form>
+                  </td>
+
+                  <td class="td-w-200">
+                    <span class="file_status"></span>
+                    <a onclick="call_imgmodal_client(this)" class="btn btn-primary mr-1 text-white check_file_status" data-target="#modalIMG" data-toggle="modal" data-client_files="{% for file in client.client_file.all %}{% if file.file_type == 'client_passport' %}{{ file.client_file }};{% endif %}{% endfor %}" data-files_id="{% for file in client.client_file.all %}{% if file.file_type == 'client_passport' %}{{ file.id }};{% endif %}{% endfor %}">
+                      <i class="fas fa-search"></i>
+                    </a>
+                    <label class="m-0 ml-1 text-white" for="file_passport_{{client.id}}">
+                      <a class="btn btn-primary btn_file_input">
+                        <i class="far fa-file-image"></i>
+                      </a>
+                    </label>
+                    <form id="form_passport_{{client.id}}">
+                      <input class="file_input" id="file_passport_{{client.id}}" data-file_type="client_passport" data-form_type="form_passport_{{client.id}}" data-client_id="{{client.id}}" name="client_passport" type="file" style="width: 0.1px; height: 0.1px; opacity: 0; z-index: -1; position: absolute; overflow: hidden">
+                    </form>
+                  </td>
+
+                  <td class="td-w-200">
+                    <span class="file_status"></span>
+                    <a onclick="call_imgmodal_client(this)" class="btn btn-primary mr-1 text-white check_file_status" data-target="#modalIMG" data-toggle="modal" data-client_files="{% for file in client.client_file.all %}{% if file.file_type == 'client_contract' %}{{ file.client_file }};{% endif %}{% endfor %}" data-files_id="{% for file in client.client_file.all %}{% if file.file_type == 'client_contract' %}{{ file.id }};{% endif %}{% endfor %}">
+                      <i class="fas fa-search"></i>
+                    </a>
+                    <label class="m-0 ml-1 text-white" for="file_contract_{{client.id}}">
+                      <a class="btn btn-primary btn_file_input">
+                        <i class="far fa-file-image"></i>
+                      </a>
+                    </label>
+                    <form id="form_contract_{{client.id}}">
+                      <input class="file_input" id="file_contract_{{client.id}}" data-file_type="client_contract" data-form_type="form_contract_{{client.id}}" data-client_id="{{client.id}}" name="client_contract" type="file" style="width: 0.1px; height: 0.1px; opacity: 0; z-index: -1; position: absolute; overflow: hidden">
+                    </form>
+                  </td>
+
+                  <td class="td-w-200">
+                    <span class="file_status"></span>
+                    <a onclick="call_imgmodal_client(this)" class="btn btn-primary mr-1 text-white check_file_status" data-target="#modalIMG" data-toggle="modal" data-client_files="{% for file in client.client_file.all %}{% if file.file_type == 'client_application' %}{{ file.client_file }};{% endif %}{% endfor %}" data-files_id="{% for file in client.client_file.all %}{% if file.file_type == 'client_application' %}{{ file.id }};{% endif %}{% endfor %}">
+                      <i class="fas fa-search"></i>
+                    </a>
+                    <label class="m-0 ml-1 text-white" for="file_application_{{client.id}}">
+                      <a class="btn btn-primary btn_file_input">
+                        <i class="far fa-file-image"></i>
+                      </a>
+                    </label>
+                    <form id="form_application_{{client.id}}">
+                      <input class="file_input" id="file_application_{{client.id}}" data-file_type="client_application" data-form_type="form_application_{{client.id}}" data-client_id="{{client.id}}" name="client_application" type="file" style="width: 0.1px; height: 0.1px; opacity: 0; z-index: -1; position: absolute; overflow: hidden">
+                    </form>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+      <tr class="collapse collapse_{{client.id}}" id="collapse_{{client.id}}">
+        <td colspan="10">
+          <div class="ml-5">
+            <h4>Машины</h4>
+            <table class="table" style="background-color: #baffc9">
+              <thead>
+                <th scope="col">ID</th>
+                <th scope="col">Трэк Номер</th>
+                <th scope="col">W8 ID</th>
+                <th scope="col">VIN</th>
+                <th scope="col">№ Invoice</th>
+                <th scope="col">Оплачено</th>
+                <th scope="col">Выиграли</th>
+                <th scope="col">Контейнер</th>
+                <th scope="col">В Украине</th>
+                <!-- <th scope="col">Фото</th> -->
+              </thead>
+              <tbody>
+                {% for vehicle in vehicles %}
+                <tr>
+                  <form class="vehicle_form">
+                    <td>{{vehicle.id}}</td>
+                    <td>{{vehicle.veh_track_num}}</td>
+                    <td>{{vehicle.veh_w8_id}}</td>
+                    <td>{{vehicle.veh_VIN}}</td>
+                    <td>{{vehicle.veh_invoice_num}}</td>
+                    <td>{{vehicle.veh_payed}}</td>
+                    <td>{{vehicle.veh_win_date}}</td>
+                    <td>{{vehicle.veh_container_num}}</td>
+                    <td>{{vehicle.veh_incomming_date}}</td>
+                  </form>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

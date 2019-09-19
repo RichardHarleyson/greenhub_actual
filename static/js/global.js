@@ -11,94 +11,111 @@ $(document).ready(function(){
 })
 
 $(document).ready(function(){
-	$('#bevents').html($('#content_counts').data('clients_count'));
-	$('#bclients').html($('#content_counts').data('events_count'));
 	$('#crm_form_add_new_client').submit(function(){
 		event.preventDefault();
-		var form_data = $(this).serialize();
+		var data = new FormData(document.getElementById('crm_form_add_new_client'));
 		$.ajax({
-			url: $(this).attr('action'),
+			url: '/global_crm/add_client',
 			type: 'POST',
-			data: form_data,
+			data: data,
+			processData: false,
+			contentType: false,
 			success: function(res){
-				$('#client_add_status').html('<h3>Клиент Добавлен</h3>');
-				location.reload();
+				console.log(res);
 			}
-		});
-		return false;
+		})
 	});
-	$('#crm_form_add_new_event').submit(function(){
-		event.preventDefault();
-		var form_data = $(this).serialize();
-		$.ajax({
-			url: $(this).attr('action'),
-			type: 'POST',
-			data: form_data,
-			success: function(res){
-				$('#event_add_status').html('<h3>Событие Добавлено</h3>');
-				location.reload();
-			}
-		});
-		return false;
-	});
-	$('.event_on').on('click', function(){
-		$(this).removeClass('event_on');
-		$(this).addClass('event_off');
-		$(this).removeClass('text-danger');
-		$(this).addClass('text-success');
-		$(this).html('Выполнено');
-		$.ajax({
-			url: '/gh_crm/update_event_status',
-			type: 'POST',
-			data: {event_id: $(this).data('event_id'), event_status: 'Выполнено'},
-			success: function(rest){
-			}
-		});
-		return false;
-	});
-	$('.event_off').on('click', function(){
-		$(this).removeClass('event_off');
-		$(this).addClass('event_on');
-		$(this).removeClass('text-success');
-		$(this).addClass('text-danger');
-		$(this).html('Не Выполнено');
-		$.ajax({
-			url: '/gh_crm/update_event_status',
-			type: 'POST',
-			data: {event_id: $(this).data('event_id'), event_status: 'Не Выполнено'},
-			success: function(rest){
-			}
-		});
-		return false;
-	});
-	$('.client_on').click(function(){
-		$(this).removeClass('client_on');
-		$(this).addClass('client_off');
-		$(this).removeClass('text-success');
-		$(this).addClass('text-secondary');
-		$.ajax({
-			url: '/gh_crm/update_client_status',
-			type: 'POST',
-			data: {client_id: $(this).data('client_id'), client_status: '0'},
-			success: function(rest){
-			}
-		});
-		return false;
-	});
-	$('.client_off').click(function(){
-		$(this).removeClass('client_off');
-		$(this).addClass('client_on');
-		$(this).removeClass('text-secondary');
-		$(this).addClass('text-success');
-		$.ajax({
-			url: '/gh_crm/update_client_status',
-			type: 'POST',
-			data: {client_id: $(this).data('client_id'), client_status: '1'},
-			success: function(rest){
-			}
-		});
-		return false;
-	});
+})
+
+$(document).ready(function(){
+// 	$('#bevents').html($('#content_counts').data('clients_count'));
+// 	$('#bclients').html($('#content_counts').data('events_count'));
+// 	$('#crm_form_add_new_client').submit(function(){
+// 		event.preventDefault();
+// 		var form_data = $(this).serialize();
+// 		$.ajax({
+// 			url: $(this).attr('action'),
+// 			type: 'POST',
+// 			data: form_data,
+// 			success: function(res){
+// 				$('#client_add_status').html('<h3>Клиент Добавлен</h3>');
+// 				location.reload();
+// 			}
+// 		});
+// 		return false;
+// 	});
+// 	$('#crm_form_add_new_event').submit(function(){
+// 		event.preventDefault();
+// 		var form_data = $(this).serialize();
+// 		$.ajax({
+// 			url: $(this).attr('action'),
+// 			type: 'POST',
+// 			data: form_data,
+// 			success: function(res){
+// 				$('#event_add_status').html('<h3>Событие Добавлено</h3>');
+// 				location.reload();
+// 			}
+// 		});
+// 		return false;
+// 	});
+	// $('.event_on').on('click', function(){
+	// 	$(this).removeClass('event_on');
+	// 	$(this).addClass('event_off');
+	// 	$(this).removeClass('text-danger');
+	// 	$(this).addClass('text-success');
+	// 	$(this).html('Выполнено');
+	// 	$.ajax({
+	// 		url: '/gh_crm/update_event_status',
+	// 		type: 'POST',
+	// 		data: {event_id: $(this).data('event_id'), event_status: 'Выполнено'},
+	// 		success: function(rest){
+	// 		}
+	// 	});
+	// 	return false;
+	// });
+	// $('.event_off').on('click', function(){
+	// 	$(this).removeClass('event_off');
+	// 	$(this).addClass('event_on');
+	// 	$(this).removeClass('text-success');
+	// 	$(this).addClass('text-danger');
+	// 	$(this).html('Не Выполнено');
+	// 	$.ajax({
+	// 		url: '/gh_crm/update_event_status',
+	// 		type: 'POST',
+	// 		data: {event_id: $(this).data('event_id'), event_status: 'Не Выполнено'},
+	// 		success: function(rest){
+	// 		}
+	// 	});
+	// 	return false;
+	// });
+	// $('.client_on').click(function(){
+	// 	$(this).removeClass('client_on');
+	// 	$(this).addClass('client_off');
+	// 	$(this).removeClass('text-success');
+	// 	$(this).addClass('text-secondary');
+	// 	$.ajax({
+	// 		url: '/gh_crm/update_client_status',
+	// 		type: 'POST',
+	// 		data: {client_id: $(this).data('client_id'), client_status: '0'},
+	// 		success: function(rest){
+	// 		}
+	// 	});
+	// 	return false;
+	// });
+	// $('.client_off').click(function(){
+	// 	$(this).removeClass('client_off');
+	// 	$(this).addClass('client_on');
+	// 	$(this).removeClass('text-secondary');
+	// 	$(this).addClass('text-success');
+	// 	$.ajax({
+	// 		url: '/gh_crm/update_client_status',
+	// 		type: 'POST',
+	// 		data: {client_id: $(this).data('client_id'), client_status: '1'},
+	// 		success: function(rest){
+	// 		}
+	// 	});
+	// 	return false;
+	// });
 });
 
 function reload_crm(){
@@ -110,6 +127,86 @@ function reload_crm(){
 			$('#crm_core').html(res);
 		}
 	});
+}
+
+$(document).ready(function(){
+	$('.comment_textarea').focus(function () {
+	    $(this).animate({ height: "10rem", width:"25rem" }, 300);
+	});
+
+	$('.comment_textarea').focusout(function () {
+	    $(this).animate({ height: "2.5rem", width:"11rem" }, 300);
+	});
+})
+
+$(document).ready(function(){
+	$('.client_tform').submit(function(){
+		event.preventDefault();
+		$(this).parent().find('textarea').blur();
+		var felem = document.getElementById('client_tform_'+$(this).data('client_id'));
+		var data = new FormData(felem);
+		data.append('client_id', $(this).data('client_id'));
+		$.ajax({
+			type: 'POST',
+			url: '/global_crm/upd_client',
+			data: data,
+			processData: false,
+			contentType: false,
+			success: function(res){
+				// console.log(res);
+				// alert(res);
+				// $(this).parent().css('background', 'green');
+				// setTimeout(function(){
+				// 	$(this).parent().css('background', 'white');
+				// }, 2000);
+				document.location.reload();
+			}
+		})
+	});
+});
+
+$(document).ready(function(){
+ $('#crm_form_add_new_vehicle').submit(function(){
+	 event.preventDefault();
+	 console.log('pressed');
+	 var data = new FormData(document.getElementById('crm_form_add_new_vehicle'));
+	 $.ajax({
+		 type: ' POST',
+		 url: '/global_crm/add_vehicle',
+		 // data: data,
+		 processData: false,
+		 contentType: false,
+		 success: function(res){
+			 console.log('Result: ');
+			 console.log(res);
+		 },
+		 fail: function(res){
+			 console.log('Failed');
+		 }
+	 })
+ });
+});
+
+function del_client(elem){
+	// console.log("#2 initiated");
+	event.preventDefault();
+	$.ajax({
+		type: 'POST',
+		url: '/global_crm/del_client',
+		data: {client_id: $(elem).data('client_id')},
+		success: function(res){
+			console.log(res);
+			$('#client_tform_'+$(elem).data('client_id')).parent().css('background', 'red');
+			setTimeout(function(){
+				$('#client_tform_'+$(elem).data('client_id')).parent().hide();
+			}, 2000);
+		}
+	})
+}
+
+function call_comment_modal(elem){
+	$('#modal_comment_textarea').val($(elem).data('client_comment'));
+	$('#modal_comments').modal('show');
 }
 
 function upd_event(element){
@@ -165,19 +262,24 @@ function remove_event(element){
 $(document).ready(function(){
 		$('.file_input').change(function(){
 			// alert('Smth changed');
-			var formdata = new FormData();
-			formdata.append('client_file', $(this).parent().find('.file_input')[0].files[0]);
+			var curr_form = document.getElementById($(this).data('form_type'));
+			var formdata = new FormData(curr_form);
 			formdata.append('client_id', $(this).data('client_id'));
+			formdata.append('file_type', $(this).data('file_type'));
+			for (var pair of formdata.entries()) {
+			    console.log(pair[0]+ ', ' + pair[1]);
+			}
 			$.ajax({
-				url: '/gh_crm/load_file',
+				url: '/global_crm/upload_client_file',
 				type: 'POST',
 				data: formdata,
 				processData: false,
 				contentType: false,
 				success: function(res){
 					console.log(res);
-					$(this).parent().find('.btn_file_input').css('background-color', 'green');
-					setTimeout(function(){$(this).parent().find('.btn_file_input').css('background-color', '#007bff')});
+					alert(res);
+					// $(this).parent().find('.btn_file_input').css('background-color', 'green');
+					// setTimeout(function(){$(this).parent().find('.btn_file_input').css('background-color', '#007bff')});
 				}
 			});
 		});
@@ -201,6 +303,17 @@ $(document).ready(function(){
 				setTimeout(function(){$('#add_veh_status').html('');}, 2000);
 			}
 		});
+	});
+});
+
+$(document).ready(function(){
+	var items = $('.check_file_status').each(function(){
+		// console.log($(this).data('client_files'));
+		if($(this).data('client_files') != ''){
+			$(this).parent().find('.file_status').html('<i class="fas fa-check fa-2x text-success align-middle mx-2"></i>');
+		}else {
+			$(this).parent().find('.file_status').html('<i class="fas fa-times fa-2x text-danger align-middle mx-2"></i>');
+		}
 	});
 });
 
@@ -244,7 +357,7 @@ function file_del(elem){
 	var data = new FormData();
 	data.append('file_id', item_id);
 	$.ajax({
-		url: '/gh_crm/del_file',
+		url: '/global_crm/del_client_file',
 		type: 'POST',
 		data: data,
 		processData: false,

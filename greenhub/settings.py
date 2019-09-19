@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 	'apps.clients',
 	'apps.greenhub_auction',
 	'apps.gh_crm',
+    'apps.global_crm',
 ]
 
 MIDDLEWARE = [

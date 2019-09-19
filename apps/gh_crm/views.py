@@ -114,7 +114,6 @@ def update_client(request):
 			client_email = request.POST.get('client_email'),
 			client_comment = request.POST.get('comment'),
 			client_status = isactive,
-
 		)
 		return HttpResponse(True)
 	except:

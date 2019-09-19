@@ -128,7 +128,7 @@ form > .form-group > .form-control{
 }
 
 .wrapper{
-    overflow-x: hidden;!important
+    overflow-x: hidden;!important;
 }
 
 .wrapper p{
@@ -386,6 +386,20 @@ form > .form-group > .form-control{
 }
 .aux_header{
 	height: 700px;
-	wigth: auto;
+	width: auto;
 	background-repeat: no-repeat;
+}
+
+.comment_textarea{
+	width: 11rem;
+}
+
+.table > tbody > tr > td{
+	padding-top: 0.25rem;
+	padding-bottom: 0.25rem;
+	vertical-align: middle;
+}
+
+.td-w-200{
+	min-width: 200px;
 }
